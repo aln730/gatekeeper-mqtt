@@ -122,8 +122,8 @@ connectionPromise.then(async () => {
     memberProjects
   );
   app.use("/doors", hybridAuth("admin"), doors);
-  app.use("/admin/keys", auth("admin"), keys);
-  app.use("/admin/users", auth("admin"), users);
+  app.use("/admin/keys", hybridAuth("admin"), keys);
+  app.use("/admin/users", hybridAuth("admin"), users);
   app.use("/admin/logs", hybridAuth("admin"), logs);
   app.use("/mobile", mobile);
 
