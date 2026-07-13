@@ -9,7 +9,7 @@ RUN corepack enable
 COPY package.json /app/package.json
 COPY pnpm-lock.yaml /app/pnpm-lock.yaml
 WORKDIR /app
-RUN pnpm i --production=true
+RUN pnpm i --production=true --no-optional
 
 COPY . /app
 CMD pnpm run kube
