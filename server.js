@@ -1,3 +1,4 @@
+import { statsd } from "./metrics.js";
 import express from "express";
 import mqtt from "mqtt";
 import { MongoClient, ObjectId } from "mongodb";
@@ -220,6 +221,7 @@ connectionPromise.then(async () => {
     } else if (topic.endsWith("/heartbeat")) {
       const doorId = topic.slice(3, -10);
       doorHeartbeats.set(doorId, Date.now());
+      statsd.increment('door.heartbeat', { door: doorId });
       console.log(`ACKing a heartbeat from ${doorId}!`);
     }
   });
