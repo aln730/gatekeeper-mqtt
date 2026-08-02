@@ -204,17 +204,6 @@ connectionPromise.then(async () => {
         console.error("Failed to insert into DB", err);
       });
 
-
-      if (granted) {
-        console.log(
-          `[${timestamp}] ${name} (${username}) is unlocking ${doorName || doorId}`
-        );
-        client.publish(`gk/${doorId}/unlock`);
-      } else {
-        console.log(
-          `[${timestamp}] Attempted unlock of ${doorName || doorId} by ${name} (${username})! Not allowed...`
-        );
-      }
     } else if (topic.endsWith("/heartbeat")) {
       const doorId = topic.slice(3, -10);
       doorHeartbeats.set(doorId, Date.now());
