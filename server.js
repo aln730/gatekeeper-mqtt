@@ -173,14 +173,7 @@ connectionPromise.then(async () => {
               return {};
             })
           : Promise.resolve({}),
-        db.collection("doors").findOne({
-          $or: [
-            { _id: doorId },
-            ...(ObjectId.isValid(doorId)
-              ? [{ _id: new ObjectId(doorId) }]
-              : []),
-          ],
-        }),
+        db.collection("doors").findOne({ _id: doorId }),
         checkAccess(db, key.userId, doorId),
       ]);
 

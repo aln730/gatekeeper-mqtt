@@ -37,7 +37,7 @@ export async function recordDoorUnlock(db, { doorId, doorName, username, name })
     username,
     name: name,
     doorsId: null,
-    keyId: "Remote Access",
+    keyId: null,
     uid: null,
     granted: true,
   }).catch((err) => {

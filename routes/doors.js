@@ -21,6 +21,12 @@ function getDoorStatus(doorId){
   }
 }
 
+function isDoorOffline(doorId) {
+    const lastHeartbeat = doorHeartbeats.get(doorId);
+    if (!lastHeartbeat) return true;
+    return Date.now() - lastHeartbeat > 1000 * 60;
+}
+
 router.get("/:doorId/status", (req, res) => {
   res.json(getDoorStatus(req.params.doorId));
 });
@@ -52,18 +58,13 @@ router.post("/:doorId/unlock", async (req, res) => {
     }
   }
 
-  if (getDoorStatus(req.params.doorId).guess === "offline") {
-    return res.status(409).json({ message: "Door is offline" });
+  if (isDoorOffline(req.params.doorId)) {
+    return res.status(400).json({ message: "Door is offline" });
   }
 
   if (req.ctx.authMethod === "oidc") {
     const doorId = req.params.doorId;
-    const doorDoc = await req.ctx.db.collection("doors").findOne({
-      $or: [
-        { _id: doorId },
-        ...(ObjectId.isValid(doorId) ? [{ _id: new ObjectId(doorId) }] : []),
-      ],
-    });
+    const doorDoc = await req.ctx.db.collection("doors").findOne({ _id: req.params.doorId });
 
     await recordDoorUnlock(req.ctx.db, {
       doorId: req.params.doorId,
