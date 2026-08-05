@@ -1,6 +1,13 @@
 import { Router } from "express";
 const router = Router();
 
+export async function recordAudit(db, entry) {
+  return db.collection("auditLogs").insertOne({ ...entry, timestamp: new Date() }).catch((err) => {
+    console.error("Failed to write audit entry", err);
+    throw err;
+  });
+}
+
 router.get("/", async (req, res) => {
   const { cursor, search, action } = req.query;
   const query = {};

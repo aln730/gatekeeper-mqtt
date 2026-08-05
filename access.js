@@ -21,27 +21,3 @@ export async function checkAccess(db, userId, doorId) {
   );
   return groupTicket?.granted;
 }
-
-export async function recordAudit(db, entry) {
-  return db.collection("auditLogs").insertOne({ ...entry, timestamp: new Date() }).catch((err) => {
-    console.error("Failed to write audit entry", err);
-    throw err;
-  });
-}
-
-export async function recordDoorUnlock(db, { doorId, doorName, username, name }) {
-  return db.collection("accessLogs").insertOne({
-    timestamp: new Date(),
-    door: doorId,
-    doorName: doorName,
-    username,
-    name: name,
-    doorsId: null,
-    keyId: null,
-    uid: null,
-    granted: true,
-  }).catch((err) => {
-    console.error("Failed to write accessLogs", err);
-    throw err;
-  });
-}

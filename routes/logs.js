@@ -1,7 +1,25 @@
 import { Router } from "express";
-import { recordAudit } from "../access.js";
+import { recordAudit } from "./audit.js";
 
 const router = Router();
+
+export async function recordDoorUnlock(db, { doorId, doorName, username, name, accessType, doorsId = null, keyId = null, uid = null, granted = true }) {
+  return db.collection("accessLogs").insertOne({
+    timestamp: new Date(),
+    door: doorId,
+    doorName,
+    username,
+    name,
+    doorsId,
+    keyId,
+    uid,
+    granted,
+    accessType,
+  }).catch((err) => {
+    console.error("Failed to write accessLogs", err);
+    throw err;
+  });
+}
 
 router.post("/access", async (req, res) => {
   const { reason } = req.body;

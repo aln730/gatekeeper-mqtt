@@ -1,7 +1,7 @@
 import { Router } from "express";
 import crypto from "crypto";
 import { REALM_NAMES } from "../constants.js";
-import { recordAudit } from "../access.js";
+import { recordAudit } from "./audit.js";
 
 const router = Router();
 
@@ -58,6 +58,7 @@ router.get("/by-user", async (req, res) => {
       _id: crypto.randomBytes(18).toString("hex"),
       userId: req.body.userId,
       uid: req.body.uid,
+      type: "physical",
       // Not created yet, so we'll just leave it disabled for now
       enabled: false,
 

@@ -1,7 +1,7 @@
 import { statsd } from "./metrics.js";
 import express from "express";
 import mqtt from "mqtt";
-import { MongoClient, ObjectId } from "mongodb";
+import { MongoClient } from "mongodb";
 import bodyParser from "body-parser";
 import morgan from "morgan";
 
@@ -11,6 +11,7 @@ import auth from "./auth.js";
 import { hybridAuth } from "./middleware/hybridAuth.js";
 import { checkAccess } from "./access.js";
 import { requireGroup } from "./middleware/oidc.js";
+import { recordDoorUnlock } from "./routes/logs.js";
 
 // API routes
 import memberProjects from "./routes/memberProjects.js";
@@ -180,16 +181,12 @@ connectionPromise.then(async () => {
       const user = userData?.user || {};
       const username = user.uid || null;
       const name = user.cn || null;
-      // Resolve door name
       const doorName = doorDoc?.name || null;
-
-      //timestamps (DUHHH?)
-      const timestamp = new Date();
+      const accessType = key.type;
 
       // Structured log
-      const logEntry = {
-        timestamp,
-        door: doorId,
+      await recordDoorUnlock(db, {
+        doorId,
         doorName,
         username,
         name,
@@ -197,11 +194,9 @@ connectionPromise.then(async () => {
         keyId: key._id,
         uid: key.uid ?? null,
         granted: !!granted,
-      };
-
-      console.log(logEntry);
-      db.collection("accessLogs").insertOne(logEntry).catch((err) => {
-        console.error("Failed to insert into DB", err);
+        accessType,
+      }).catch((err) => {
+        console.error("Failed to insert into accessLogs", err);
       });
 
     } else if (topic.endsWith("/heartbeat")) {
