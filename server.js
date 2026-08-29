@@ -137,7 +137,12 @@ connectionPromise.then(async () => {
   app.use("/doors", hybridAuth("admin"), doors);
   app.use("/admin/keys", hybridAuth("admin"), requireGroup("rtp"), keys);
   app.use("/admin/users", hybridAuth("admin"), requireGroup("rtp"), users);
-  app.use("/admin/logs", hybridAuth("admin"), requireGroup("rtp"), logs);
+  app.use(
+    "/admin/logs",
+    hybridAuth("admin"),
+    requireGroup("rtp", "eboard"),
+    logs,
+  );
   app.use("/admin/audit", hybridAuth("admin"), requireGroup("rtp"), audit);
   app.use("/mobile", mobile);
 
