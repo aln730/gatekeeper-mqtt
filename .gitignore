@@ -9,3 +9,5 @@ yarn-error.log
 npm-error.log
 /.vscode
 /.idea
+/rust/target
+/rust/Cargo.lock
