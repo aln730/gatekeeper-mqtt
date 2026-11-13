@@ -34,6 +34,14 @@ async fn list(
         .try_collect::<Vec<Document>>()
         .await
         .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+    
+    let mut tickets = tickets;
+
+    for ticket in &mut tickets {
+        if let Ok(id) = ticket.get_object_id("_id") {
+            ticket.insert("_id", id.to_hex());
+        }
+    }
 
     Ok(Json(tickets))
 }
