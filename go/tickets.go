@@ -40,7 +40,6 @@ func getTickets(w http.ResponseWriter, r *http.Request) {
 	defer cursor.Close(ctx)
 
 	tickets := []bson.M{}
-
 	if err := cursor.All(ctx, &tickets); err != nil {
 		http.Error(w, "Failed to read tickets", http.StatusInternalServerError)
 		return

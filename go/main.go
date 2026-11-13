@@ -1,4 +1,3 @@
-
 package main
 
 import (
@@ -34,7 +33,6 @@ func main() {
 	}
 
 	db = client.Database("gatekeeper")
-
 	log.Println("DB connection opened!")
 
 	mux := http.NewServeMux()
