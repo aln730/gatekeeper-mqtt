@@ -21,6 +21,7 @@ import users from "./routes/users.js";
 import mobile from "./routes/mobile.js";
 import logs from "./routes/logs.js";
 import audit from "./routes/audit.js";
+import tickets from "./routes/tickets.js";
 
 //fetch user from the https endpoint
 async function fetchUser(endpoint, token, memberProjectsId) {
@@ -154,6 +155,7 @@ connectionPromise.then(async () => {
     requireGroup("rtp", "eboard"),
     audit,
   );
+  app.use("/admin/tickets", tickets);
   app.use("/mobile", mobile);
 
   client.on("connect", async () => {
